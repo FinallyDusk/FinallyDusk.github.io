@@ -24,15 +24,15 @@
 <link rel="stylesheet" href="/css/app.css?v=0.2.5">
 
   
-  <meta name="keywords" content="杂谈" />
+  <meta name="keywords" content="小工具,Unity" />
 
 
-<link rel="canonical" href="http://example.com/2020/12/05/BlogDescription/">
+<link rel="canonical" href="http://example.com/2020/12/13/Unity%E8%AE%A1%E6%97%B6%E5%99%A8/">
 
 
 
   <title>
-博客说明 |
+Unity计时器 |
 NOQ = Hexo</title>
 <meta name="generator" content="Hexo 5.2.0"></head>
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -60,16 +60,16 @@ NOQ = Hexo</title>
         <div id="brand">
           <div class="pjax">
           
-  <h1 itemprop="name headline">博客说明
+  <h1 itemprop="name headline">Unity计时器
   </h1>
   
 <div class="meta">
-  <span class="item" title="Created: 2020-12-05 14:13:58">
+  <span class="item" title="Created: 2020-12-13 16:32:12">
     <span class="icon">
       <i class="ic i-calendar"></i>
     </span>
     <span class="text">Posted on</span>
-    <time itemprop="dateCreated datePublished" datetime="2020-12-05T14:13:58+08:00">2020-12-05</time>
+    <time itemprop="dateCreated datePublished" datetime="2020-12-13T16:32:12+08:00">2020-12-13</time>
   </span>
 </div>
 
@@ -101,7 +101,7 @@ NOQ = Hexo</title>
 
       </div>
       <div id="imgs" class="pjax">
-          <img src="/img/QQ%E5%9B%BE%E7%89%8720181003190615.jpg">
+          <img src="/img/Unity%E8%AE%A1%E6%97%B6%E5%99%A8_cover.png">
       </div>
     </header>
     <div id="waves">
@@ -129,7 +129,7 @@ NOQ = Hexo</title>
 </div>
 
     <article itemscope itemtype="http://schema.org/Article" class="post block" lang="en">
-  <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/05/BlogDescription/">
+  <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/13/Unity%E8%AE%A1%E6%97%B6%E5%99%A8/">
 
   <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="image" content="/images/WebIcon.jpg">
@@ -144,18 +144,45 @@ NOQ = Hexo</title>
   <div class="body md" itemprop="articleBody">
     
 
-    <p>  最近看了陈逸鹤的 <code>程序员的自我修养</code> 一书之后，发现程序员要学会包装，以下为原文：</p>
+    <h3 id="unity计时器"><a class="markdownIt-Anchor" href="#unity计时器">#</a> Unity 计时器</h3>
+<h4 id="前言"><a class="markdownIt-Anchor" href="#前言">#</a> 前言</h4>
+<p>  Unity 有自己的协程 ( <code>Coroutine</code> )… 仔细想了想，自己做的计时器还是比不上 Unity 的协程，唯一说得上优点的估计就是可以随时暂停与开启了吧（虽然 <code>Coroutine</code>  也可以），但总归还是自己花了点时间制作的，所以还是在此记录下来。</p>
+<div class="links"><div class="item" title="计时器"><span class="exturl image" data-url="aHR0cDovL25vdGUueW91ZGFvLmNvbS9ub3Rlc2hhcmU/aWQ9NjVkMGJlNDg0YmJkYmQ4M2ZkNDhkOTA4ZDA3MzI1YzMmYW1wO3N1Yj01Q0IyNjFFQUI3RkQ0QTMyODUyOEM1QzlENTMwOTkxNg==" data-background-image="/img/Unity计时器_cover.png"></span>
+          <div class="info">
+          <span class="exturl title" data-url="aHR0cDovL25vdGUueW91ZGFvLmNvbS9ub3Rlc2hhcmU/aWQ9NjVkMGJlNDg0YmJkYmQ4M2ZkNDhkOTA4ZDA3MzI1YzMmYW1wO3N1Yj01Q0IyNjFFQUI3RkQ0QTMyODUyOEM1QzlENTMwOTkxNg==">计时器</span>
+          <p class="desc">点此下载对应代码</p>
+          </div></div></div>
+<h4 id="组成"><a class="markdownIt-Anchor" href="#组成">#</a> 组成</h4>
+<p><strong>类</strong></p>
+<p><code>GameTimerComponent</code> 	 <code>GameTimerSystem</code> 	 <code>GameTimerItem</code> 	 <code>GameTimerItemNotInitException</code></p>
+<p><strong>接口</strong></p>
+<p><code>ITimerController</code></p>
+<h4 id="详细说明"><a class="markdownIt-Anchor" href="#详细说明">#</a> 详细说明</h4>
+<h5 id="gametimercomponent"><a class="markdownIt-Anchor" href="#gametimercomponent">#</a> GameTimerComponent</h5>
+<p>  继承了 MonoBehaviour，用于给 <code>GameTimerSystem</code>  更新，所以重要的就只有 <code>Update</code>  里面的内容，其他的都可以随便写，只需要在 <code>Update</code>  函数里面让 <code>GameTimerSystem</code>  更新即可</p>
+<h5 id="gametimersystem"><a class="markdownIt-Anchor" href="#gametimersystem">#</a> GameTimerSystem</h5>
+<p>  最主要的计时系统，如果要回收继续使用，建议调用一次 <code>InitSystem</code>  (一直只使用一次就没有这个必要了)，最主要的方法为 <code>GetTimer</code> ，其他的方法基本不用看，需要的操作都可以从类 <code>GameTimerItem</code>  中找到，需要注意，如果你在计时器执行方法时做了操作（ <code>添加``暂停``继续``移除</code> ）, 将会在下一次更新计时器时生效，具体代码如下：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnUpdate</span>(<span class="params"><span class="built_in">float</span> deltaTime</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	AddWorkTimer();</span><br><span class="line">	PauseWorkTimer();</span><br><span class="line">	ContinueWorkTimer();</span><br><span class="line">	RemoveWorkTimer();</span><br><span class="line">	PollWorkTimer(deltaTime);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如代码所示，在轮询中是按增加计时器（ <code>AddWorkTimer</code> ），暂停工作中的计时器（ <code>PauseWorkTimer</code> ）… 更新工作中的计时器 ( <code>PoolWorkTimer</code> ) 的顺序来的，所以在更新时的操作，会等到下一个更新才生效。</p>
+<h5 id="gametimeritem"><a class="markdownIt-Anchor" href="#gametimeritem">#</a> GameTimerItem</h5>
+<p>  计时器，不能自己 new 出来，必需要从 <code>GameTimerSystem.GetTimer</code>  方法获取，获取之后需要调用 <code>InitItem</code>  方法，参数有五个：</p>
 <blockquote>
-<p>​		说到包装，人们往往会产生一种不好的感觉，把它与虚伪、假的东西联系在一起。其实，我所说的包装应该包含两层意思：</p>
-<p>​		・	知道什么是美的（优秀的）。</p>
-<p>​		・	精心制作。</p>
+<p><code>count</code>  	计时器执行次数</p>
+<p><code>intervalTime</code> 	执行间隔</p>
+<p><code>callback</code> 	每次执行的方法</p>
+<p><code>startTrigger</code> 	计时器刚开始调用时是否触发 <code>callback</code> ，默认为 <code>false</code></p>
+<p><code>controller</code> 	计时器控制者，默认为空，不为空时，基础的计时器更新时间会结果 <code>controller.UpdateDeltaTime</code>  方法的控制，以达到单个计时器暂停的效果（和 <code>Pause</code>  方法不同，此方法由 controller 控制，所以可以做到如 war3 中单个单位暂停后，眩晕之类的 buff 持续时间不变的情况，当然也可以调用 <code>Pause</code>  方法，但是这样就表示单位需要持有这个计时器）</p>
 </blockquote>
-<p>  程序员不仅要学会写代码，还需要写出格式优雅的代码（此处仅指格式上的，并不对程序架构进行探讨），书中还说程序员需要学会 “自我营销”，不应该一个人埋头苦干（当然，技术也是要学的），所以我才有了搭建自己的博客的想法（虽然之前一直在 CSDN 上写的，但是后来在 b 站上看见了个人博客搭建视频，也就自己搞一个，博客搭建<span class="exturl" data-url="aHR0cHM6Ly93d3cuYmlsaWJpbGkuY29tL3ZpZGVvL0JWMVliNDExYTd0eQ==">视频</span>与<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">博客主题</span>，在此感谢大佬的教学与分享）。</p>
-<p>  这个博客主要就是想记录一下我个人在工作或者学习中遇见的问题及解决办法，以便自己能随时查看以及希望可以帮到有同样问题的其他人。</p>
-<p>  最后就这样了，实在是不知道该写些啥了。</p>
+<p>方法 <code>SetEndCallback</code>  可以设置计时器结束时的回调（计时器不能强行结束）</p>
+<p>外部可以调用的方法有：开始计时器 <code>Start</code> ，暂停 <code>Pause</code> , 继续 <code>Continue</code></p>
+<h5 id="gametimeritemnotinitexception"><a class="markdownIt-Anchor" href="#gametimeritemnotinitexception">#</a> GameTimerItemNotInitException</h5>
+<p>  这个没啥好说的，一个异常类</p>
+<h5 id="itimercontroller"><a class="markdownIt-Anchor" href="#itimercontroller">#</a> ITimerController</h5>
+<p>  可以看上面的解释</p>
 
       <div class="tags">
-          <a href="/tags/%E6%9D%82%E8%B0%88/" rel="tag"><i class="ic i-tag"></i> 杂谈</a>
+          <a href="/tags/%E5%B0%8F%E5%B7%A5%E5%85%B7/" rel="tag"><i class="ic i-tag"></i> 小工具</a>
+          <a href="/tags/Unity/" rel="tag"><i class="ic i-tag"></i> Unity</a>
       </div>
   </div>
 
@@ -167,7 +194,7 @@ NOQ = Hexo</title>
       <i class="ic i-calendar-check"></i>
     </span>
     <span class="text">Edited on</span>
-    <time title="Modified: 2020-12-06 14:31:20" itemprop="dateModified" datetime="2020-12-06T14:31:20+08:00">2020-12-06</time>
+    <time title="Modified: 2020-12-13 17:36:09" itemprop="dateModified" datetime="2020-12-13T17:36:09+08:00">2020-12-13</time>
   </span>
 </div>
 
@@ -203,7 +230,7 @@ NOQ = Hexo</title>
   </li>
   <li class="link">
     <strong>Post link: </strong>
-    <a href="http://example.com/2020/12/05/BlogDescription/" title="博客说明">http://example.com/2020/12/05/BlogDescription/</a>
+    <a href="http://example.com/2020/12/13/Unity%E8%AE%A1%E6%97%B6%E5%99%A8/" title="Unity计时器">http://example.com/2020/12/13/Unity计时器/</a>
   </li>
   <li class="license">
     <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> unless stating additionally.
@@ -220,16 +247,16 @@ NOQ = Hexo</title>
 
 <div class="post-nav">
     <div class="item left">
-    </div>
-    <div class="item right">
       
 
-  <a href="/2020/12/06/DataMapFile/" itemprop="url" rel="next" data-background-image="&#x2F;img&#x2F;76.jpg" title="DataMapFile工具">
-  <span class="type">Next Post</span>
+  <a href="/2020/12/06/DataMapFile/" itemprop="url" rel="prev" data-background-image="&#x2F;img&#x2F;76.jpg" title="DataMapFile工具">
+  <span class="type">Previous Post</span>
   <span class="category"><i class="ic i-flag"></i> </span>
   <h3>DataMapFile工具</h3>
   </a>
 
+    </div>
+    <div class="item right">
     </div>
 </div>
 
@@ -246,6 +273,7 @@ NOQ = Hexo</title>
   <div class="panels">
     <div class="inner">
       <div class="contents panel pjax" data-title="Contents">
+          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#unity%E8%AE%A1%E6%97%B6%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text"> Unity 计时器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%84%E6%88%90"><span class="toc-number">1.2.</span> <span class="toc-text"> 组成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E8%AF%B4%E6%98%8E"><span class="toc-number">1.3.</span> <span class="toc-text"> 详细说明</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#gametimercomponent"><span class="toc-number">1.3.1.</span> <span class="toc-text"> GameTimerComponent</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#gametimersystem"><span class="toc-number">1.3.2.</span> <span class="toc-text"> GameTimerSystem</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#gametimeritem"><span class="toc-number">1.3.3.</span> <span class="toc-text"> GameTimerItem</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#gametimeritemnotinitexception"><span class="toc-number">1.3.4.</span> <span class="toc-text"> GameTimerItemNotInitException</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#itimercontroller"><span class="toc-number">1.3.5.</span> <span class="toc-text"> ITimerController</span></a></li></ol></li></ol></li></ol>
       </div>
       <div class="related panel pjax" data-title="Related">
       </div>
@@ -324,7 +352,7 @@ NOQ = Hexo</title>
 <div class="breadcrumb">
 </div>
 
-    <span><a href="/2020/12/06/DataMapFile/" title="DataMapFile工具">DataMapFile工具</a></span>
+    <span><a href="/2020/12/05/BlogDescription/" title="博客说明">博客说明</a></span>
   </li>
 
       
@@ -342,7 +370,7 @@ NOQ = Hexo</title>
 <div class="breadcrumb">
 </div>
 
-    <span><a href="/2020/12/05/BlogDescription/" title="博客说明">博客说明</a></span>
+    <span><a href="/2020/12/06/DataMapFile/" title="DataMapFile工具">DataMapFile工具</a></span>
   </li>
 
   </ul>
@@ -373,7 +401,7 @@ NOQ = Hexo</title>
   </div>
 <script data-config type="text/javascript">
   var LOCAL = {
-    path: '2020/12/05/BlogDescription/',
+    path: '2020/12/13/Unity计时器/',
     favicon: {
       show: "（●´3｀●）Goooood",
       hide: "(´Д｀)Booooom"
